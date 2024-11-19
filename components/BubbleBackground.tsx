@@ -21,11 +21,14 @@ export default function BubbleBackground() {
 
   const createBubble = useCallback((): Bubble => {
     const colors = [
-      'bg-gradient-to-br from-blue-400/40 to-purple-400/40',
-      'bg-gradient-to-br from-purple-400/40 to-pink-400/40',
-      'bg-gradient-to-br from-blue-400/40 to-indigo-400/40',
+      'bg-gradient-to-br from-orange-400/40 to-red-400/40',
+      'bg-gradient-to-br from-pink-400/40 to-purple-400/40',
+      'bg-gradient-to-br from-yellow-400/40 to-orange-400/40',
       'bg-gradient-to-br from-indigo-400/40 to-purple-400/40',
-      'bg-gradient-to-br from-purple-400/40 to-pink-400/40' // TODO: Add more colors here
+      'bg-gradient-to-br from-pink-400/40 to-purple-400/40', // TODO: Add more colors here
+      'bg-gradient-to-br from-orange-400/40 to-violet-400/40',
+      'bg-gradient-to-br from-yellow-400/40 to-pink-400/40',
+      'bg-gradient-to-br from-red-400/40 to-indigo-400/40',
     ]
     return {
       id: Math.random(),
@@ -97,13 +100,13 @@ export default function BubbleBackground() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
               onClick={() => setIsEnabled(!isEnabled)}
-              className="fixed top-4 right-4 z-50"
+              className="fixed top-4 right-4 z-50 bg-white/40"
               aria-label="Toggle bubble background"
             >
-              <Droplets className={isEnabled ? "text-blue-500" : "text-gray-500"} />
+              <Droplets className={isEnabled ? "text-orange-600" : "text-gray-500"} />
             </Button>
           </TooltipTrigger>
           <TooltipContent>

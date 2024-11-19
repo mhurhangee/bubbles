@@ -108,7 +108,7 @@ export default function CalmForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-500 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-300 to-fuchsia-400 p-4">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStep}
@@ -174,14 +174,14 @@ export default function CalmForm() {
                   <Button 
                     variant="outline" 
                     onClick={prevStep} 
-                    className="mr-4 px-6 py-2 text-lg text-gray-600 border-gray-300 hover:bg-gray-50 transition-all duration-300"
+                    className="mr-4 px-6 py-2 text-lg bg-pink-100 text-pink-700 border hover:bg-pink-200 transition-all duration-300"
                   >
                     Back
                   </Button>
                 )}
                 <Button 
                   onClick={nextStep}
-                  className="px-6 py-2 text-lg font-light bg-blue-100 text-blue-700 hover:bg-blue-200 transition-all duration-300"
+                  className="px-6 py-2 text-lg bg-purple-100 text-purple-700 hover:bg-purple-200 transition-all duration-300"
                 >
                   {currentStep === 0 ? "Begin" : "Next"}
                 </Button>
