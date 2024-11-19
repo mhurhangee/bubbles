@@ -184,7 +184,7 @@ export default function CalmForm() {
               <CardFooter className="flex justify-center pb-6">
                 <Button 
                   onClick={() => setShowFAQ(false)}
-                  className="ml-2 px-6 py-2 text-lg bg-purple-700 text-gray-100 hover:bg-purple-200 transition-all duration-300 rounded-full "
+                  className="ml-2 px-6 py-2 text-lg bg-purple-700 text-gray-100 hover:bg-purple-200 transition-all duration-300 rounded-full border-none"
                 >
                   Back to Form
                 </Button>
@@ -283,9 +283,8 @@ export default function CalmForm() {
                 <AnimatedText custom={4}>
                   {currentStep > 0 && (
                     <Button 
-                      variant="outline" 
                       onClick={prevStep} 
-                      className="mr-2 px-6 py-2 text-lg bg-white/20 text-purple-700 hover:bg-pink-200 transition-all duration-300 rounded-full "
+                      className="mr-2 px-6 py-2 text-lg bg-white/20 text-purple-700 hover:bg-white/40 hover:text-purple-700 transition-all duration-300 rounded-full "
                     >
                       Back
                     </Button>
@@ -294,13 +293,13 @@ export default function CalmForm() {
                     <div className="flex justify-between w-full">
                       <Button 
                         onClick={() => setShowFAQ(true)}
-                        className="mr-2 px-6 py-2 text-lg bg-white/20 border text-purple-700 hover:bg-pink-200 transition-all duration-300 rounded-full "
+                        className="mr-2 px-6 py-2 text-lg bg-white/20 text-purple-700 hover:bg-white/40 hover:text-purple-700 transition-all duration-300 rounded-full "
                       >
                         About
                       </Button>
                       <Button 
                         onClick={nextStep}
-                        className="ml-2 px-6 py-2 text-lg bg-purple-700 text-gray-100 hover:bg-purple-200 transition-all duration-300 rounded-full "
+                        className="ml-2 px-6 py-2 text-lg bg-purple-700 text-gray-100 hover:bg-purple-900 transition-all duration-300 rounded-full "
                       >
                         Begin
                       </Button>
@@ -308,7 +307,7 @@ export default function CalmForm() {
                   ) : (
                     <Button 
                       onClick={nextStep}
-                      className="ml-2 px-6 py-2 text-lg bg-purple-700 text-gray-100  hover:bg-purple-200 transition-all duration-300 rounded-full "
+                      className="ml-2 px-6 py-2 text-lg bg-purple-700 text-gray-100 hover:bg-purple-900 transition-all duration-300 rounded-full "
                     >
                       Next
                     </Button>
