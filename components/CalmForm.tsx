@@ -176,7 +176,7 @@ export default function CalmForm() {
                   <AccordionItem value="item-4" className="border-b-0">
                     <AccordionTrigger className="hover:no-underline">What this form is not</AccordionTrigger>
                     <AccordionContent className="transition-all duration-300">
-                      This form is not a replacement for friends, family, medical or professional support. If you're struggling, please reach out to a qualified professional or trusted individual for help. Help is available and you are not alone.
+                      This form is not a replacement for friends, family, medical or professional support. If you&#39;re struggling, please reach out to a qualified professional or trusted individual for help. Help is available and you are not alone.
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
