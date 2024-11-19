@@ -6,32 +6,42 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button"
 import { Toggle } from "@/components/ui/toggle"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface Question {
   id: number
-  text: string[]
-  options?: string[]
-  type: 'options' | 'text'
+  text: string
+  options: string[]
 }
 
 const initialQuestions: Question[] = [
   { 
     id: 1, 
-    text: ["How are you", "feeling today?"],
-    options: ["Happy", "Sad", "Anxious", "Excited", "Tired"],
-    type: 'options'
+    text: "What would you like to focus on today?",
+    options: ["Emotions", "Energy", "Health", "Productivity", "Self-care", "Relationships", "Mindfulness", "Not sure"],
   },
   { 
     id: 2, 
-    text: ["What's one thing", "you're grateful for?"],
-    type: 'text'
+    text: "How are you feeling overall today?",
+    options: ["Happy", "Sad", "Anxious", "Excited", "Tired", "Calm", "Stressed", "Energetic", "Relaxed", "Frustrated", "Not Sure"],
   },
   { 
     id: 3, 
-    text: ["What's a small goal", "you have for today?"],
-    type: 'text'
-  }
-]
+    text: "How much time can you dedicate to self-reflection or wellness today?",
+    options: ["5 minutes", "10 minutes", "15 minutes", "30 minutes", "1 hour or more", "Not sure"],
+  },
+  { 
+    id: 4, 
+    text: "What's your main intention for today?",
+    options: ["Stay calm", "Be productive", "Feel connected", "Rest and recharge", "Practice mindfulness", "Not sure"],
+  },
+  { 
+    id: 5, 
+    text: "How well did you sleep last night?", 
+    options: ["Very well", "Well", "Neutral", "Poorly", "Very poorly", "I didn't sleep", "Not sure"], 
+  },
+];
 
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.95 },
@@ -70,21 +80,50 @@ const AnimatedText = ({ children, custom }: { children: React.ReactNode; custom:
 export default function CalmForm() {
   const [currentStep, setCurrentStep] = useState(0)
   const [questions, setQuestions] = useState(initialQuestions)
-  const [answers, setAnswers] = useState<{[key: number]: string[] | string}>({})
+  const [answers, setAnswers] = useState<{[key: number]: string[]}>({})
   const [showFAQ, setShowFAQ] = useState(false)
   const [showTransition, setShowTransition] = useState<false | 'in' | 'out'>(false)
   const [countdown, setCountdown] = useState(4)
   const [nextQuestionIndex, setNextQuestionIndex] = useState(0)
+  const [showReview, setShowReview] = useState(false)
+  const [showReviewModal, setShowReviewModal] = useState(false)
 
-  const generateNextQuestion = useCallback(() => {
-    const newQuestion: Question = {
-      id: questions.length + 1,
-      text: [`Generated question ${questions.length + 1}`, `part 2`],
-      type: Math.random() > 0.5 ? 'options' : 'text',
-      options: Math.random() > 0.5 ? ["Option 1", "Option 2", "Option 3"] : undefined
+  const generateNextQuestion = useCallback(async () => {
+    try {
+      const response = await fetch('/api/generate-question', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          previousQuestions: questions.map(q => q.text),
+          previousAnswers: answers,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to generate question')
+      }
+
+      const data = await response.json()
+      const newQuestion: Question = {
+        id: questions.length + 1,
+        text: data.question.question,
+        options: data.question.options,
+      }
+
+      setQuestions(prev => [...prev, newQuestion])
+    } catch (error) {
+      console.error('Error generating question:', error)
+      // Fallback to a default question if AI generation fails
+      const fallbackQuestion: Question = {
+        id: questions.length + 1,
+        text: "What's your current state of mind?",
+        options: ["Focused", "Distracted", "Calm", "Overwhelmed", "Curious"],
+      }
+      setQuestions(prev => [...prev, fallbackQuestion])
     }
-    setQuestions(prev => [...prev, newQuestion])
-  }, [questions])
+  }, [questions, answers])
 
   const nextStep = () => {
     if (currentStep < questions.length) {
@@ -96,6 +135,11 @@ export default function CalmForm() {
       setNextQuestionIndex(currentStep + 1)
       setShowTransition('in')
       setCountdown(4)
+    }
+
+    // Check if it's time to show the review
+    if (currentStep >= 10 && (currentStep - 10) % 5 === 0) {
+      setShowReview(true)
     }
   }
 
@@ -124,7 +168,7 @@ export default function CalmForm() {
 
   const handleOptionToggle = (questionId: number, option: string) => {
     setAnswers(prev => {
-      const currentAnswers = prev[questionId] as string[] || []
+      const currentAnswers = prev[questionId] || []
       if (currentAnswers.includes(option)) {
         return { ...prev, [questionId]: currentAnswers.filter(a => a !== option) }
       } else {
@@ -133,9 +177,43 @@ export default function CalmForm() {
     })
   }
 
-  const handleTextChange = (questionId: number, text: string) => {
-    setAnswers(prev => ({ ...prev, [questionId]: text }))
-  }
+  const renderReviewContent = () => (
+    <ScrollArea className="h-[60vh] w-full">
+      {questions.map((question, index) => (
+        <div key={question.id} className="mb-4">
+          <h3 className="font-bold text-lg">{question.text}</h3>
+          <p className="text-gray-600">
+            {answers[question.id]?.join(', ') || 'No answer provided'}
+          </p>
+        </div>
+      ))}
+    </ScrollArea>
+  )
+
+  const renderReviewOptions = () => (
+    <Card className="border-none shadow-xl bg-white/60 backdrop-blur-sm rounded-xl">
+      <CardHeader>
+        <CardTitle className="text-3xl text-center text-gray-700">Review Your Answers</CardTitle>
+      </CardHeader>
+      <CardContent className="p-6 text-center">
+        <p className="text-gray-600 mb-4">Would you like to review your answers or continue?</p>
+        <div className="flex justify-center space-x-4">
+          <Button 
+            onClick={() => setShowReviewModal(true)}
+            className="px-6 py-2 text-lg bg-purple-700 text-gray-100 hover:bg-purple-600 transition-all duration-300 rounded-full border-none"
+          >
+            See Answers
+          </Button>
+          <Button 
+            onClick={() => setShowReview(false)}
+            className="px-6 py-2 text-lg bg-gray-200 text-purple-700 hover:bg-gray-300 transition-all duration-300 rounded-full border-none"
+          >
+            Continue
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  )
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-300 to-fuchsia-400 p-4">
@@ -176,7 +254,7 @@ export default function CalmForm() {
                   <AccordionItem value="item-4" className="border-b-0">
                     <AccordionTrigger className="hover:no-underline">What this form is not</AccordionTrigger>
                     <AccordionContent className="transition-all duration-300">
-                      This form is not a replacement for friends, family, medical or professional support. If you&#39;re struggling, please reach out to a qualified professional or trusted individual for help. Help is available and you are not alone.
+                      This form is not a replacement for friends, family, medical or professional support. If you're struggling, please reach out to a qualified professional or trusted individual for help. Help is available and you are not alone.
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
@@ -184,12 +262,23 @@ export default function CalmForm() {
               <CardFooter className="flex justify-center pb-6">
                 <Button 
                   onClick={() => setShowFAQ(false)}
-                  className="ml-2 px-6 py-2 text-lg bg-purple-700 text-gray-100 hover:bg-purple-200 transition-all duration-300 rounded-full border-none"
+                  className="ml-2 px-6 py-2 text-lg bg-purple-700 text-gray-100 hover:bg-purple-600 transition-all duration-300 rounded-full border-none"
                 >
                   Back to Form
                 </Button>
               </CardFooter>
             </Card>
+          </motion.div>
+        ) : showReview ? (
+          <motion.div
+            key="review"
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="w-full max-w-md"
+          >
+            {renderReviewOptions()}
           </motion.div>
         ) : showTransition ? (
           <motion.div
@@ -247,34 +336,21 @@ export default function CalmForm() {
                 ) : (
                   <>
                     <AnimatedText custom={1}>
-                      <p className="text-2xl text-gray-700 mb-2">{questions[currentStep - 1].text[0]}</p>
-                    </AnimatedText>
-                    <AnimatedText custom={2}>
-                      <p className="text-2xl text-gray-700 mb-6">{questions[currentStep - 1].text[1]}</p>
+                      <p className="text-2xl text-gray-700 mb-6">{questions[currentStep - 1].text}</p>
                     </AnimatedText>
                     <AnimatedText custom={3}>
-                      {questions[currentStep - 1].type === 'options' && questions[currentStep - 1].options && (
-                        <div className="flex flex-wrap justify-center gap-2 mb-4">
-                          {questions[currentStep - 1].options?.map((option, index) => (
-                            <Toggle
-                              key={index}
-                              pressed={answers[currentStep]?.includes(option)}
-                              onPressedChange={() => handleOptionToggle(currentStep, option)}
-                              className="bg-white/30 hover:bg-white/50 data-[state=on]:bg-purple-200 data-[state=on]:text-purple-700"
-                            >
-                              {option}
-                            </Toggle>
-                          ))}
-                        </div>
-                      )}
-                      {questions[currentStep - 1].type === 'text' && (
-                        <input
-                          className="mt-4 w-full bg-white/30 backdrop-blur-sm border-gray-200 rounded-lg px-4 py-3 text-lg focus:ring-2 focus:ring-purple-100 focus:border-purple-200 transition-all duration-300 rounded-full"
-                          placeholder="Type your answer here..."
-                          value={answers[currentStep] as string || ''}
-                          onChange={(e) => handleTextChange(currentStep, e.target.value)}
-                        />
-                      )}
+                      <div className="flex flex-wrap justify-center gap-2 mb-4">
+                        {questions[currentStep - 1].options.map((option, index) => (
+                          <Toggle
+                            key={index}
+                            pressed={answers[currentStep]?.includes(option)}
+                            onPressedChange={() => handleOptionToggle(currentStep, option)}
+                            className="bg-white/30 hover:bg-white/50 data-[state=on]:bg-purple-200 data-[state=on]:text-purple-700"
+                          >
+                            {option}
+                          </Toggle>
+                        ))}
+                      </div>
                     </AnimatedText>
                   </>
                 )}
@@ -299,7 +375,7 @@ export default function CalmForm() {
                       </Button>
                       <Button 
                         onClick={nextStep}
-                        className="ml-2 px-6 py-2 text-lg bg-purple-700 text-gray-100 hover:bg-purple-900 transition-all duration-300 rounded-full "
+                        className="ml-2 px-6 py-2 text-lg bg-purple-700 text-gray-100 hover:bg-purple-600 transition-all duration-300 rounded-full "
                       >
                         Begin
                       </Button>
@@ -307,7 +383,7 @@ export default function CalmForm() {
                   ) : (
                     <Button 
                       onClick={nextStep}
-                      className="ml-2 px-6 py-2 text-lg bg-purple-700 text-gray-100 hover:bg-purple-900 transition-all duration-300 rounded-full "
+                      className="ml-2 px-6 py-2 text-lg bg-purple-700 text-gray-100 hover:bg-purple-600 transition-all duration-300 rounded-full "
                     >
                       Next
                     </Button>
@@ -318,6 +394,17 @@ export default function CalmForm() {
           </motion.div>
         )}
       </AnimatePresence>
+      <Dialog open={showReviewModal} onOpenChange={setShowReviewModal}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Your Answers</DialogTitle>
+            <DialogDescription>
+              Review your responses to the mindfulness questions.
+            </DialogDescription>
+          </DialogHeader>
+          {renderReviewContent()}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
