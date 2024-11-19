@@ -241,7 +241,7 @@ export default function CalmForm() {
                 {currentStep === 0 ? (
                   <AnimatedText custom={1}>
                     <p className="text-xl text-gray-600 leading-relaxed mb-4">
-                      Take a moment to reflect.
+                      Take a moment for self reflection.
                     </p>
                   </AnimatedText>
                 ) : (
