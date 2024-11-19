@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Toggle } from "@/components/ui/toggle"
-import { Hand } from 'lucide-react'
 
 interface Question {
   id: number
