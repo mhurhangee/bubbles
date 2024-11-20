@@ -327,14 +327,10 @@ export default function CalmForm() {
             className="w-full max-w-md"
           >
             <Card className="border-none shadow-xl bg-card/60 backdrop-blur-sm rounded-3xl">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-3xl text-center text-foreground font-serif">
-                  <AnimatedText custom={0}>
-                    {currentStep === 0 ? "Welcome" : `Question ${currentStep}`}
-                  </AnimatedText>
-                </CardTitle>
-              </CardHeader>
               <CardContent className="text-center p-8">
+              <AnimatedText custom={0} >
+                    <div className='text-3xl text-center text-foreground font-serif pb-2'>{currentStep === 0 ? "Welcome" : undefined}</div>
+                  </AnimatedText>
                 {currentStep === 0 ? (
                   <AnimatedText custom={1}>
                     <p className="text-xl text-foreground/80 leading-relaxed mb-4">
