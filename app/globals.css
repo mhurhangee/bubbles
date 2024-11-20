@@ -1,15 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Comfortaa:wght@300..700&family=Fredoka:wght@300..700&family=Quicksand:wght@300..700&display=swap" rel="stylesheet');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root, .pastel {
     --primary: 30.7 97.2% 72.4%;
     --secondary: 292 91.4% 72.5%;
     --accent: 272.1 71.7% 47.1%;
     --foreground: 215.3 19.3% 34.5%;
     --muted: 268.7 100% 95.5%;
-    --card: 0 0% 100%;
+    --card: 34.3 100% 91.8%;
     --bubblelight1: 27 96% 61%;
     --bubbledark1: 0 90.6% 70.8%;    
     --bubblelight2: 328.6 85.5% 70.2%;
@@ -26,90 +28,80 @@
     --bubbledark7: 328.6 85.5% 70.2%;
     --bubblelight8: 0 90.6% 70.8%;
     --bubbledark8: 234.5 89.5% 73.9%;
-    --radius: 0.0rem;
-  }
-  .pastel {
-    --primary: 30.7 97.2% 72.4%;
-    --secondary: 292 91.4% 72.5%;
-    --accent: 272.1 71.7% 47.1%;
-    --foreground: 215.3 19.3% 34.5%;
-    --muted: 268.7 100% 95.5%;
-    --card: 0 0% 100%;
-    --bubblelight1: 27 96% 61%;
-    --bubbledark1: 0 90.6% 70.8%;    
-    --bubblelight2: 328.6 85.5% 70.2%;
-    --bubbledark2: 270 95.2% 75.3%;
-    --bubblelight3: 47.9 95.8% 53.1%;
-    --bubbledark3: 27 96% 61%;  
-    --bubblelight4: 234.5 89.5% 73.9%;
-    --bubbledark4: 270 95.2% 75.3%;  
-    --bubblelight5: 292 91.4% 72.5%;
-    --bubbledark5: 255.1 91.7% 76.3%;  
-    --bubblelight6: 43.3 96.4% 56.3%;
-    --bubbledark6: 252.5 94.7% 85.1%;  
-    --bubblelight7: 47.9 95.8% 53.1%;
-    --bubbledark7: 328.6 85.5% 70.2%;
-    --bubblelight8: 0 90.6% 70.8%;
-    --bubbledark8: 234.5 89.5% 73.9%;      
+    --radius: 0.5rem;
+    --font-sans: 'Quicksand', sans-serif;
+    --font-serif: 'Quicksand', sans-serif;
   }
 
   .forest {
-    --primary: 142 76% 36%;
-    --secondary: 151 55% 41%;
-    --accent: 26 100% 50%;
+    --primary: 160.1 84.1% 39.4%;
+    --secondary: 144.9 80.4% 10%;
+    --accent: 15.3 74.6% 27.8%;
     --foreground: 215 25% 27%;
-    --muted: 141 79% 85%;
-    --card: 0 0% 100%;
-    --bubblelight1: 141 79% 45%;
-    --bubbledark1: 26 100% 50%;
-    --bubblelight2: 151 55% 41%;
-    --bubbledark2: 0 100% 67%;
-    --bubblelight3: 88 50% 53%;
-    --bubbledark3: 262 83% 58%;
-    --bubblelight4: 158 64% 52%;
-    --bubbledark4: 291 64% 42%;
-    --bubblelight5: 78 100% 67%;
-    --bubbledark5: 199 89% 48%;
-    --bubblelight6: 16 100% 50%;
-    --bubbledark6: 326 100% 74%;
-    --bubblelight7: 45 100% 51%;
-    --bubbledark7: 217 91% 60%;
-    --bubblelight8: 96 100% 59%;
-    --bubbledark8: 280 87% 65%;
+    --muted: 33.3 100% 96.5%;
+    --card: 141.7 76.6% 73.1%;
+
+    --bubblelight1: 82.7 78% 55.5%;
+    --bubbledark1: 142.4 71.8% 29.2%;
+    
+    --bubblelight2: 158.1 64.4% 51.6%;
+    --bubbledark2: 15.3 74.6% 27.8%;
+
+    --bubblelight3: 82 84.5% 67.1%;
+    --bubbledark3: 28.4 72.5% 25.7%;
+
+    --bubblelight4: 161.4 93.5% 30.4%;
+    --bubbledark4: 89.3 80.4% 10%;
+
+    --bubblelight5: 83.7 80.5% 44.3%;
+    --bubbledark5: 26 83.3% 14.1%;
+
+    --bubblelight6: 82 84.5% 67.1%;
+    --bubbledark6: 89.3 80.4% 10%;
+
+    --bubblelight7: 141.7 76.6% 73.1%;
+    --bubbledark7: 144.9 80.4% 10%;
+
+    --bubblelight8: 156.2 71.6% 66.9%;
+    --bubbledark8: 165.7 91.3% 9%;
+    --font-sans: 'Comfortaa', cursive;
+    --font-serif: 'Comfortaa', cursive;
   }
   
-  .aurora {
-    --primary: 172 66% 50%;
-    --secondary: 262 83% 58%;
+  .island {
+    --primary: 52.8 98.3% 76.9%;
+    --secondary: 187 92.4% 69%;
     --accent: 330 81% 60%;
     --foreground: 215 25% 27%;
-    --muted: 173 80% 92%;
-    --card: 0 0% 100%;
-    --bubblelight1: 172 66% 50%;
-    --bubbledark1: 262 83% 58%;
-    --bubblelight2: 199 89% 48%;
-    --bubbledark2: 330 81% 60%;
-    --bubblelight3: 217 91% 60%;
-    --bubbledark3: 291 64% 42%;
-    --bubblelight4: 189 94% 43%;
-    --bubbledark4: 326 100% 74%;
-    --bubblelight5: 152 76% 74%;
-    --bubbledark5: 280 87% 65%;
-    --bubblelight6: 186 100% 77%;
-    --bubbledark6: 335 85% 65%;
-    --bubblelight7: 207 100% 78%;
-    --bubbledark7: 315 66% 54%;
-    --bubblelight8: 182 100% 77%;
-    --bubbledark8: 250 100% 72%;
+    --muted: 54.5 91.7% 95.3%;
+    --card: 48 96.5% 88.8%;
+    --bubblelight1: 80.9 88.5% 79.6%;
+    --bubbledark1: 83.7 80.5% 44.3%;
+    --bubblelight2: 32.1 97.7% 83.1%;
+    --bubbledark2: 20.5 90.2% 48.2%;
+    --bubblelight3: 325.9 84.6% 89.8%;
+    --bubbledark3: 292 91.4% 72.5%;
+    --bubblelight4: 142.1 70.6% 45.3%;
+    --bubbledark4: 142.4 71.8% 29.2%;
+    --bubblelight5: 26 90.5% 37.1%;
+    --bubbledark5: 22.7 82.5% 31.4%;
+    --bubblelight6: 168.4 83.8% 78.2%;
+    --bubbledark6: 173.4 80.4% 40%;
+    --bubblelight7: 0 93.5% 81.8%;
+    --bubbledark7: 0 72.2% 50.6%;
+    --bubblelight8: 50.4 97.8% 63.5%;
+    --bubbledark8: 45.4 93.4% 47.5%;
+    --font-sans: 'Fredoka', sans-serif;
+    --font-serif: 'Fredoka', sans-serif;
   }
   
   .campfire {
-    --primary: 25 95% 53%;
-    --secondary: 45 93% 47%;
-    --accent: 0 100% 50%;
-    --foreground: 215 25% 27%;
-    --muted: 28 100% 86%;
-    --card: 0 0% 100%;
+    --primary: 20.5 90.2% 48.2%;
+    --secondary: 0 74.7% 15.5%;
+    --accent: 240 10% 3.9%;
+    --foreground: 240 5.9% 10%;
+    --muted: 240 5.9% 90%;
+    --card: 30.7 97.2% 72.4%;
     --bubblelight1: 25 95% 53%;
     --bubbledark1: 0 100% 50%;
     --bubblelight2: 45 93% 47%;
@@ -117,123 +109,129 @@
     --bubblelight3: 33 100% 50%;
     --bubbledark3: 353 96% 61%;
     --bubblelight4: 21 100% 50%;
-    --bubbledark4: 339 100% 75%;
+    --bubbledark4: 20.9 91.7% 14.1%;
     --bubblelight5: 36 100% 50%;
-    --bubbledark5: 326 100% 74%;
+    --bubbledark5: 0 74.7% 15.5%;
     --bubblelight6: 43 96% 58%;
-    --bubbledark6: 291 64% 42%;
+    --bubbledark6: 240 5.9% 10%;
     --bubblelight7: 48 96% 53%;
-    --bubbledark7: 262 83% 58%;
-    --bubblelight8: 39 100% 50%;
-    --bubbledark8: 280 87% 65%;
+    --bubbledark7: 13 81.1% 14.5%%;
+    --bubblelight8: 43.3 96.4% 56.3%;
+    --bubbledark8: 13 81.1% 14.5%;
+    --font-sans: 'Baloo 2', sans-serif;
+    --font-serif: 'Baloo 2', sans-serif;
   }
   
   .midnight {
     --primary: 226 57% 21%;
-    --secondary: 213 94% 68%;
-    --accent: 262 83% 58%;
-    --foreground: 210 40% 98%;
-    --muted: 226 70% 55%;
-    --card: 222 47% 11%;
+    --secondary: 222.2 84% 4.9%;
+    --accent: 174.7 83.9% 31.6%;
+    --foreground: 226.5 100% 93.9%;
+    --muted: 226.5 100% 93.9%;
+    --card: 222.2 84% 4.9%;
     --bubblelight1: 226 57% 21%;
-    --bubbledark1: 262 83% 58%;
+    --bubbledark1: 224 71.4% 4.1%;
     --bubblelight2: 213 94% 68%;
-    --bubbledark2: 291 64% 42%;
+    --bubbledark2: 222.2 84% 4.9%;
     --bubblelight3: 199 89% 48%;
-    --bubbledark3: 326 100% 74%;
+    --bubbledark3: 273.5 86.9% 21%;
     --bubblelight4: 217 91% 60%;
-    --bubbledark4: 335 85% 65%;
+    --bubbledark4: 296.8 90.2% 16.1%;
     --bubblelight5: 189 94% 43%;
-    --bubbledark5: 315 66% 54%;
+    --bubbledark5: 243.8 47.1% 20%;
     --bubblelight6: 207 100% 78%;
     --bubbledark6: 250 100% 72%;
     --bubblelight7: 186 100% 77%;
     --bubbledark7: 280 87% 65%;
     --bubblelight8: 182 100% 77%;
-    --bubbledark8: 270 95% 75%;
+    --bubbledark8: 20 14.3% 4.1%;
+    --font-sans: 'Quicksand', sans-serif;
+    --font-serif: 'Quicksand', sans-serif;
   }
   
   .ocean {
-    --primary: 217 91% 60%;
-    --secondary: 172 66% 50%;
+    --primary: 172 66% 50%;
+    --secondary: 217 91% 60%;
     --accent: 199 89% 48%;
     --foreground: 215 25% 27%;
     --muted: 213 100% 96%;
     --card: 0 0% 100%;
-    --bubblelight1: 217 91% 60%;
-    --bubbledark1: 199 89% 48%;
-    --bubblelight2: 172 66% 50%;
-    --bubbledark2: 262 83% 58%;
-    --bubblelight3: 189 94% 43%;
-    --bubbledark3: 291 64% 42%;
-    --bubblelight4: 199 89% 48%;
-    --bubbledark4: 326 100% 74%;
-    --bubblelight5: 186 100% 77%;
-    --bubbledark5: 335 85% 65%;
-    --bubblelight6: 182 100% 77%;
-    --bubbledark6: 315 66% 54%;
-    --bubblelight7: 207 100% 78%;
-    --bubbledark7: 250 100% 72%;
+    --bubblelight1: 185.1 95.9% 90.4%;
+    --bubbledark1: 200.4 98% 39.4%;
+    --bubblelight2: 211.7 96.4% 78.4%;
+    --bubbledark2: 225.9 70.7% 40.2%;
+    --bubblelight3: 200.6 94.4% 86.1%;
+    --bubbledark3: 200.4 98% 39.4%;
+    --bubblelight4: 170.6 76.9% 64.3%;
+    --bubbledark4: 174.7 83.9% 31.6%;
+    --bubblelight5: 54.9 96.7% 88%;
+    --bubbledark5: 172.5 66% 50.4%;
+    --bubblelight6: 187 92.4% 69%;
+    --bubbledark6: 201 90% 27.5%;
+    --bubblelight7: 217.2 91.2% 59.8%;
+    --bubbledark7: 224.3 76.3% 48%;
     --bubblelight8: 195 100% 50%;
     --bubbledark8: 280 87% 65%;
+    --font-sans: 'Comfortaa', cursive;
+    --font-serif: 'Comfortaa', cursive;
   }
   
-  .desert {
-    --primary: 43 96% 58%;
-    --secondary: 25 95% 53%;
-    --accent: 0 100% 50%;
+  .oasis {
+    --primary: 48 96.6% 76.7%;
+    --secondary: 27 96% 61%;
+    --accent: 158.1 64.4% 51.6%;
     --foreground: 215 25% 27%;
-    --muted: 48 100% 96%;
-    --card: 0 0% 100%;
+    --muted: 33.3 100% 96.5%;
+    --card: 48 96.5% 88.8%;
     --bubblelight1: 43 96% 58%;
     --bubbledark1: 0 100% 50%;
     --bubblelight2: 25 95% 53%;
     --bubbledark2: 15 100% 57%;
     --bubblelight3: 45 93% 47%;
     --bubbledark3: 353 96% 61%;
-    --bubblelight4: 36 100% 50%;
-    --bubbledark4: 339 100% 75%;
-    --bubblelight5: 39 100% 50%;
-    --bubbledark5: 326 100% 74%;
+    --bubblelight4: 187 92.4% 69%;
+    --bubbledark4: 143.8 61.2% 20.2%;
+    --bubblelight5: 198.4 93.2% 59.6%;
+    --bubbledark5: 224.3 76.3% 48%;
     --bubblelight6: 48 96% 53%;
     --bubbledark6: 291 64% 42%;
     --bubblelight7: 33 100% 50%;
     --bubbledark7: 262 83% 58%;
-    --bubblelight8: 21 100% 50%;
-    --bubbledark8: 280 87% 65%;
+    --bubblelight8: 52.8 98.3% 76.9%;
+    --bubbledark8: 85.9 78.4% 27.3%;
+    --font-sans: 'Fredoka', sans-serif;
+    --font-serif: 'Fredoka', sans-serif;
   }
   
   .galaxy {
-    --primary: 262 83% 58%;
-    --secondary: 330 81% 60%;
-    --accent: 226 57% 21%;
+    --primary: 222.2 84% 4.9%;
+    --secondary: 0 0% 3.9%;
+    --accent: 20.5 90.2% 48.2%;
     --foreground: 210 40% 98%;
     --muted: 270 100% 94%;
-    --card: 222 47% 11%;
-    --bubblelight1: 262 83% 58%;
-    --bubbledark1: 226 57% 21%;
-    --bubblelight2: 330 81% 60%;
-    --bubbledark2: 199 89% 48%;
-    --bubblelight3: 250 100% 72%;
-    --bubbledark3: 172 66% 50%;
-    --bubblelight4: 280 87% 65%;
-    --bubbledark4: 217 91% 60%;
-    --bubblelight5: 291 64% 42%;
-    --bubbledark5: 189 94% 43%;
-    --bubblelight6: 326 100% 74%;
-    --bubbledark6: 186 100% 77%;
-    --bubblelight7: 335 85% 65%;
-    --bubbledark7: 182 100% 77%;
-    --bubblelight8: 315 66% 54%;
-    --bubbledark8: 207 100% 78%;
+    --card: 222.2 84% 4.9%;
+    --bubblelight1: 20.5 90.2% 48.2%;
+    --bubbledark1: 15 79.1% 33.7%;
+    --bubblelight2: 217.2 91.2% 59.8%;
+    --bubbledark2: 142.4 71.8% 29.2%;
+    --bubblelight3: 45.9 96.7% 64.5%;
+    --bubbledark3: 45.4 93.4% 47.5%;
+    --bubblelight4: 27 96% 61%;
+    --bubbledark4: 0 70% 35.3%;
+    --bubblelight5: 292.2 84.1% 60.6%;
+    --bubbledark5: 296.7 63.6% 28%;
+    --bubblelight6: 258.3 89.5% 66.3%;
+    --bubbledark6: 263.5 67.4% 34.9%;
+    --bubblelight7: 156.2 71.6% 66.9%;
+    --bubbledark7: 161.4 93.5% 30.4%;
+    --bubblelight8: 48 96.5% 88.8%;
+    --bubbledark8: 50.4 97.8% 63.5%;
+    --font-sans: 'Baloo 2', sans-serif;
+    --font-serif: 'Baloo 2', sans-serif;
   }
-}
 
-@layer base {
-  * {
-    @apply border-border;
-  }
+  
   body {
-    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }

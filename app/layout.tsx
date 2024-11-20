@@ -1,10 +1,7 @@
 import BubbleBackground from '@/components/BubbleBackground'
 import './globals.css'
-import { Quicksand } from 'next/font/google'
 import { Metadata } from 'next'
 import ThemeSwitcher from '@/components/ThemeSwitcher'
-
-const quicksand = Quicksand({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Self Reflection',
@@ -25,9 +22,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={quicksand.className}>
-      <body>
-      <ThemeSwitcher />
+    <html lang="en">
+      <body className="font-sans">
+        <ThemeSwitcher />
         <BubbleBackground />
         {children}
       </body>

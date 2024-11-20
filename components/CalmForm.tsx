@@ -193,7 +193,7 @@ export default function CalmForm() {
   const renderReviewOptions = () => (
     <Card className="border-none shadow-xl bg-card/60 backdrop-blur-sm rounded-3xl">
       <CardHeader>
-        <CardTitle className="text-3xl text-center text-foreground">Review Your Answers</CardTitle>
+        <CardTitle className="text-3xl text-center text-foreground font-serif">Review Your Answers</CardTitle>
       </CardHeader>
       <CardContent className="p-6 text-center">
         <p className="text-foreground/90 mb-4">Would you like to review your answers or continue?</p>
@@ -206,7 +206,7 @@ export default function CalmForm() {
           </Button>
           <Button 
             onClick={() => setShowReview(false)}
-            className="px-6 py-2 text-lg bg-card/20 text-accent hover:bg-card/40 transition-all duration-300 rounded-full border-none"
+            className="px-6 py-2 text-lg bg-muted/30  text-accent hover:bg-muted/50 transition-all duration-300 rounded-full border-none"
           >
             Continue
           </Button>
@@ -232,7 +232,7 @@ export default function CalmForm() {
                 <CardTitle className="text-3xl text-center text-foreground">FAQ</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
-                <Accordion type="single" collapsible>
+                <Accordion type="single" collapsible className='text-foreground'>
                   <AccordionItem value="item-1" className="border-b-0">
                     <AccordionTrigger>What is this form for?</AccordionTrigger>
                     <AccordionContent>
@@ -298,7 +298,7 @@ export default function CalmForm() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.5 }}
-                    className="text-3xl text-foreground mb-4"
+                    className="text-3xl text-foreground mb-4 font-serif"
                   >
                     Breathe {showTransition}
                   </motion.p>
@@ -320,7 +320,7 @@ export default function CalmForm() {
           >
             <Card className="border-none shadow-xl bg-card/60 backdrop-blur-sm rounded-3xl">
               <CardHeader className="pb-2">
-                <CardTitle className="text-3xl text-center text-foreground">
+                <CardTitle className="text-3xl text-center text-foreground font-serif">
                   <AnimatedText custom={0}>
                     {currentStep === 0 ? "Welcome" : `Question ${currentStep}`}
                   </AnimatedText>
@@ -345,7 +345,7 @@ export default function CalmForm() {
                             key={index}
                             pressed={answers[currentStep]?.includes(option)}
                             onPressedChange={() => handleOptionToggle(currentStep, option)}
-                            className="bg-card/30 hover:bg-card/50 data-[state=on]:bg-purple-200 data-[state=on]:text-accent data-[state=on]:border rounded-full px-4"
+                            className="bg-muted/30 hover:bg-muted/50 data-[state=on]:bg-accent/20 data-[state=on]:text-accent data-[state=on]:border border-accent rounded-full px-4 mx-1 text-foreground"
                           >
                             {option}
                           </Toggle>
@@ -360,7 +360,7 @@ export default function CalmForm() {
                   {currentStep > 0 && (
                     <Button 
                       onClick={prevStep} 
-                      className="mr-2 px-6 py-2 text-lg bg-card/20 text-accent hover:bg-card/40 hover:text-accent transition-all duration-300 rounded-full "
+                      className="mr-2 px-6 py-2 text-lg bg-muted/30  text-accent hover:bg-muted/50 hover:text-accent transition-all duration-300 rounded-full "
                     >
                       Back
                     </Button>
@@ -369,7 +369,7 @@ export default function CalmForm() {
                     <div className="flex justify-between w-full">
                       <Button 
                         onClick={() => setShowFAQ(true)}
-                        className="mr-2 px-6 py-2 text-lg bg-card/20 text-accent hover:bg-card/40 hover:text-accent transition-all duration-300 rounded-full "
+                        className="mr-2 px-6 py-2 text-lg bg-muted/30 text-accent hover:bg-muted/50 hover:text-accent transition-all duration-300 rounded-full "
                       >
                         About
                       </Button>
@@ -383,7 +383,7 @@ export default function CalmForm() {
                   ) : (
                     <Button 
                       onClick={nextStep}
-                      className="ml-2 px-6 py-2 text-lg bg-accent text-muted hover:bg-accent/80 transition-all duration-300 rounded-full "
+                      className="ml-2 px-6 py-2 text-lg bg-accent text-muted hover:bg-accent/80 transition-all duration-300 rounded-full shadow-lg"
                     >
                       Next
                     </Button>
