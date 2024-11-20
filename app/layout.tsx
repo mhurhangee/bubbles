@@ -2,6 +2,7 @@ import BubbleBackground from '@/components/BubbleBackground'
 import './globals.css'
 import { Quicksand } from 'next/font/google'
 import { Metadata } from 'next'
+import ThemeSwitcher from '@/components/ThemeSwitcher'
 
 const quicksand = Quicksand({ subsets: ['latin'] })
 
@@ -26,6 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={quicksand.className}>
       <body>
+      <ThemeSwitcher />
         <BubbleBackground />
         {children}
       </body>

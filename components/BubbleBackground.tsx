@@ -1,9 +1,6 @@
 'use client'
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { Toggle } from "@/components/ui/toggle"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Droplets } from 'lucide-react'
 
 interface Bubble {
   id: number
@@ -16,20 +13,19 @@ interface Bubble {
 
 export default function BubbleBackground() {
   const [bubbles, setBubbles] = useState<Bubble[]>([])
-  const [isEnabled, setIsEnabled] = useState(true)
   const [screenWidth, setScreenWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0)
   const animationFrameId = useRef<number | null>(null)
 
   const createBubble = useCallback((): Bubble => {
     const colors = [
-      'bg-gradient-to-br from-orange-400/40 to-red-400/40',
-      'bg-gradient-to-br from-pink-400/40 to-purple-400/40',
-      'bg-gradient-to-br from-yellow-400/40 to-orange-400/40',
-      'bg-gradient-to-br from-indigo-400/40 to-purple-400/40',
-      'bg-gradient-to-br from-pink-400/40 to-purple-400/40',
-      'bg-gradient-to-br from-orange-400/40 to-violet-400/40',
-      'bg-gradient-to-br from-yellow-400/40 to-pink-400/40',
-      'bg-gradient-to-br from-red-400/40 to-indigo-400/40',
+      'bg-gradient-to-br from-bubblelight1/40 to-bubbledark1/40',
+      'bg-gradient-to-br from-bubblelight2/40 to-bubbledark2/40',
+      'bg-gradient-to-br from-bubblelight3/40 to-bubbledark3/40',
+      'bg-gradient-to-br from-bubblelight4/40 to-bubbledark4/40',
+      'bg-gradient-to-br from-bubblelight5/40 to-bubbledark5/40',
+      'bg-gradient-to-br from-bubblelight6/40 to-bubbledark6/40',
+      'bg-gradient-to-br from-bubblelight7/40 to-bubbledark7/40',
+      'bg-gradient-to-br from-bubblelight8/40 to-bubbledark8/40',
     ]
     return {
       id: Math.random(),
@@ -72,26 +68,19 @@ export default function BubbleBackground() {
   }, [])
 
   useEffect(() => {
-    if (isEnabled) {
-      const initialBubbles = Array.from({ length: getBubbleCount() }, () => ({
-        ...createBubble(),
-        delay: Math.random() * 10
-      }))
-      setBubbles(initialBubbles)
-      animationFrameId.current = requestAnimationFrame(animateBubbles)
-    } else {
-      setBubbles([])
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current)
-      }
-    }
+    const initialBubbles = Array.from({ length: getBubbleCount() }, () => ({
+      ...createBubble(),
+      delay: Math.random() * 10
+    }))
+    setBubbles(initialBubbles)
+    animationFrameId.current = requestAnimationFrame(animateBubbles)
 
     return () => {
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current)
       }
     }
-  }, [isEnabled, createBubble, getBubbleCount, animateBubbles])
+  }, [createBubble, getBubbleCount, animateBubbles])
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -99,7 +88,7 @@ export default function BubbleBackground() {
         if (animationFrameId.current) {
           cancelAnimationFrame(animationFrameId.current)
         }
-      } else if (isEnabled) {
+      } else {
         animationFrameId.current = requestAnimationFrame(animateBubbles)
       }
     }
@@ -109,45 +98,24 @@ export default function BubbleBackground() {
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
-  }, [isEnabled, animateBubbles])
+  }, [animateBubbles])
 
   return (
-    <>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Toggle
-              pressed={isEnabled}
-              onPressedChange={setIsEnabled}
-              className="fixed top-4 right-4 z-50 backdrop-blur-md rounded-full bg-white/40 data-[state=on]:bg-white/40"
-              aria-label="Toggle bubble background"
-            >
-              <Droplets className={isEnabled ? "text-orange-600" : "text-gray-500"} />
-            </Toggle>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{isEnabled ? 'Disable' : 'Enable'} bubble background</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-      {isEnabled && (
-        <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          {bubbles.map((bubble) => (
-            <div
-              key={bubble.id}
-              id={`bubble-${bubble.id}`}
-              className={`absolute rounded-full ${bubble.color}`}
-              style={{
-                width: `${bubble.size}px`,
-                height: `${bubble.size}px`,
-                left: `${bubble.left}%`,
-                bottom: `-${bubble.size}px`,
-                animation: `rise ${bubble.duration}s ${bubble.delay}s linear`,
-              }}
-            />
-          ))}
-        </div>
-      )}
+    <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      {bubbles.map((bubble) => (
+        <div
+          key={bubble.id}
+          id={`bubble-${bubble.id}`}
+          className={`absolute rounded-full ${bubble.color}`}
+          style={{
+            width: `${bubble.size}px`,
+            height: `${bubble.size}px`,
+            left: `${bubble.left}%`,
+            bottom: `-${bubble.size}px`,
+            animation: `rise ${bubble.duration}s ${bubble.delay}s linear`,
+          }}
+        />
+      ))}
       <style jsx>{`
         @keyframes rise {
           0% {
@@ -158,6 +126,6 @@ export default function BubbleBackground() {
           }
         }
       `}</style>
-    </>
+    </div>
   )
 }
