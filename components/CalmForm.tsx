@@ -6,8 +6,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button"
 import { Toggle } from "@/components/ui/toggle"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import ReviewAnswers from "@/components/ReviewAnswers"
 
 interface Question {
   id: number
@@ -16,43 +15,43 @@ interface Question {
 }
 
 const initialQuestions: Question[] = [
-  { 
-    id: 1, 
+  {
+    id: 1,
     text: "What would you like to focus on today?",
     options: ["Emotions", "Energy", "Health", "Productivity", "Self-care", "Relationships", "Mindfulness", "Not sure"],
   },
-  { 
-    id: 2, 
+  {
+    id: 2,
     text: "How are you feeling overall today?",
     options: ["Happy", "Sad", "Anxious", "Excited", "Tired", "Calm", "Stressed", "Energetic", "Relaxed", "Frustrated", "Not Sure"],
   },
-  { 
-    id: 3, 
+  {
+    id: 3,
     text: "How much time can you dedicate to self-reflection or wellness today?",
     options: ["5 minutes", "10 minutes", "15 minutes", "30 minutes", "1 hour or more", "Not sure"],
   },
-  { 
-    id: 4, 
+  {
+    id: 4,
     text: "What's your main intention for today?",
     options: ["Stay calm", "Be productive", "Feel connected", "Rest and recharge", "Practice mindfulness", "Not sure"],
   },
-  { 
-    id: 5, 
-    text: "How well did you sleep last night?", 
-    options: ["Very well", "Well", "Neutral", "Poorly", "Very poorly", "I didn't sleep", "Not sure"], 
+  {
+    id: 5,
+    text: "How well did you sleep last night?",
+    options: ["Very well", "Well", "Neutral", "Poorly", "Very poorly", "I didn't sleep", "Not sure"],
   },
 ];
 
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.95 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     scale: 1,
     transition: { duration: 1.2, ease: "easeOut" }
   },
-  exit: { 
-    opacity: 0, 
-    scale: 0.95, 
+  exit: {
+    opacity: 0,
+    scale: 0.95,
     transition: { duration: 1, ease: "easeIn" }
   }
 }
@@ -80,13 +79,13 @@ const AnimatedText = ({ children, custom }: { children: React.ReactNode; custom:
 export default function CalmForm() {
   const [currentStep, setCurrentStep] = useState(0)
   const [questions, setQuestions] = useState(initialQuestions)
-  const [answers, setAnswers] = useState<{[key: number]: string[]}>({})
+  const [answers, setAnswers] = useState<{ [key: number]: string[] }>({})
   const [showFAQ, setShowFAQ] = useState(false)
   const [showTransition, setShowTransition] = useState<false | 'in' | 'out'>(false)
   const [countdown, setCountdown] = useState(4)
   const [nextQuestionIndex, setNextQuestionIndex] = useState(0)
   const [showReview, setShowReview] = useState(false)
-  const [showReviewModal, setShowReviewModal] = useState(false)
+  const [showReviewAnswers, setShowReviewAnswers] = useState(false)
 
   const generateNextQuestion = useCallback(async () => {
     try {
@@ -177,18 +176,17 @@ export default function CalmForm() {
     })
   }
 
-  const renderReviewContent = () => (
-    <ScrollArea className="h-[60vh] w-full">
-      {questions.map((question, index) => (
-        <div key={question.id} className="mb-4">
-          <h3 className="font-bold text-lg">{question.text}</h3>
-          <p className="text-foreground/80">
-            {answers[question.id]?.join(', ') || 'No answer provided'}
-          </p>
-        </div>
-      ))}
-    </ScrollArea>
-  )
+  const resetForm = () => {
+    setCurrentStep(0);
+    setQuestions(initialQuestions);
+    setAnswers({});
+    setShowFAQ(false);
+    setShowTransition(false);
+    setCountdown(5);
+    setNextQuestionIndex(0);
+    setShowReview(false);
+    setShowReviewAnswers(false);
+  }
 
   const renderReviewOptions = () => (
     <Card className="border-none shadow-xl bg-card/60 backdrop-blur-sm rounded-3xl">
@@ -196,15 +194,18 @@ export default function CalmForm() {
         <CardTitle className="text-3xl text-center text-foreground font-serif">Review Your Answers</CardTitle>
       </CardHeader>
       <CardContent className="p-6 text-center">
-        <p className="text-foreground/90 mb-4">Would you like to review your answers or continue?</p>
+        <p className="text-foreground/90 mb-4">Would you like to finish and review your answers or continue?</p>
         <div className="flex justify-center space-x-4">
-          <Button 
-            onClick={() => setShowReviewModal(true)}
+          <Button
+            onClick={() => {
+              setShowReviewAnswers(true);
+              setShowReview(false);
+            }}
             className="px-6 py-2 text-lg bg-accent text-muted hover:bg-accent/80 transition-all duration-300 rounded-full border-none"
           >
-            See Answers
+            Review Answers
           </Button>
-          <Button 
+          <Button
             onClick={() => setShowReview(false)}
             className="px-6 py-2 text-lg bg-muted/30  text-accent hover:bg-muted/50 transition-all duration-300 rounded-full border-none"
           >
@@ -260,7 +261,7 @@ export default function CalmForm() {
                 </Accordion>
               </CardContent>
               <CardFooter className="flex justify-center pb-6">
-                <Button 
+                <Button
                   onClick={() => setShowFAQ(false)}
                   className="ml-2 px-6 py-2 text-lg bg-accent text-muted hover:bg-accent/80 transition-all duration-300 rounded-full border-none"
                 >
@@ -280,6 +281,13 @@ export default function CalmForm() {
           >
             {renderReviewOptions()}
           </motion.div>
+        ) : showReviewAnswers ? (
+          <ReviewAnswers
+            questions={questions}
+            answers={answers}
+            onClose={() => setShowReviewAnswers(false)}
+            onReset={resetForm}
+          />
         ) : showTransition ? (
           <motion.div
             key="transition"
@@ -358,8 +366,8 @@ export default function CalmForm() {
               <CardFooter className="flex justify-center space-x-4 pb-8">
                 <AnimatedText custom={4}>
                   {currentStep > 0 && (
-                    <Button 
-                      onClick={prevStep} 
+                    <Button
+                      onClick={prevStep}
                       className="mr-2 px-6 py-2 text-lg bg-muted/30  text-accent hover:bg-muted/50 hover:text-accent transition-all duration-300 rounded-full "
                     >
                       Back
@@ -367,13 +375,13 @@ export default function CalmForm() {
                   )}
                   {currentStep === 0 ? (
                     <div className="flex justify-between w-full">
-                      <Button 
+                      <Button
                         onClick={() => setShowFAQ(true)}
                         className="mr-2 px-6 py-2 text-lg bg-muted/30 text-accent hover:bg-muted/50 hover:text-accent transition-all duration-300 rounded-full "
                       >
                         About
                       </Button>
-                      <Button 
+                      <Button
                         onClick={nextStep}
                         className="ml-2 px-6 py-2 text-lg bg-accent text-muted hover:bg-accent/80 transition-all duration-300 rounded-full "
                       >
@@ -381,7 +389,7 @@ export default function CalmForm() {
                       </Button>
                     </div>
                   ) : (
-                    <Button 
+                    <Button
                       onClick={nextStep}
                       className="ml-2 px-6 py-2 text-lg bg-accent text-muted hover:bg-accent/80 transition-all duration-300 rounded-full shadow-lg"
                     >
@@ -394,17 +402,6 @@ export default function CalmForm() {
           </motion.div>
         )}
       </AnimatePresence>
-      <Dialog open={showReviewModal} onOpenChange={setShowReviewModal}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Your Answers</DialogTitle>
-            <DialogDescription>
-              Review your responses to the mindfulness questions.
-            </DialogDescription>
-          </DialogHeader>
-          {renderReviewContent()}
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }
