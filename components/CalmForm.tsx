@@ -273,7 +273,8 @@ export default function CalmForm() {
                 </Button>
                 <Button
                   onClick={() => {
-                    setShowReview(false); 
+                    setShowReview(false);
+                    setCurrentStep(nextQuestionIndex);
                     nextStep()
                   }}
                   className="px-6 py-2 text-lg bg-muted/30  text-accent hover:bg-muted/50 transition-all duration-300 rounded-full border-none"
