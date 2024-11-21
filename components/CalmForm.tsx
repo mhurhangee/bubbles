@@ -8,6 +8,7 @@ import { Toggle } from "@/components/ui/toggle"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import ReviewAnswers from "@/components/ReviewAnswers"
 import AnimatedSummary from "@/components/AnimatedSummary"
+import next from 'next'
 
 // Constants
 const BREATHING_EXERCISE_DURATION = 5 // seconds
@@ -271,7 +272,10 @@ export default function CalmForm() {
                   Finish
                 </Button>
                 <Button
-                  onClick={() => setShowReview(false)}
+                  onClick={() => {
+                    setShowReview(false); 
+                    nextStep()
+                  }}
                   className="px-6 py-2 text-lg bg-muted/30  text-accent hover:bg-muted/50 transition-all duration-300 rounded-full border-none"
                 >
                   Continue
