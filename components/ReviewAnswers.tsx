@@ -12,6 +12,10 @@ import jsPDF from 'jspdf'
 interface ReviewAnswersProps {
   questions: { id: number; text: string }[]
   answers: { [key: number]: string[] }
+  summary: {
+    summary: string;
+    tasks: string[];
+  }
   onClose: () => void
   onReset: () => void
 }
@@ -30,7 +34,7 @@ const cardVariants = {
   }
 }
 
-export default function ReviewAnswers({ questions, answers, onClose, onReset }: ReviewAnswersProps) {
+export default function ReviewAnswers({ questions, answers, summary, onClose, onReset }: ReviewAnswersProps) {
   const [editingAnswer, setEditingAnswer] = useState<number | null>(null)
   const [editedAnswers, setEditedAnswers] = useState({ ...answers })
 
@@ -58,11 +62,45 @@ export default function ReviewAnswers({ questions, answers, onClose, onReset }: 
     const pdf = new jsPDF()
     let yOffset = 20
 
+    // Get current date and format it
+    const currentDate = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+
     pdf.setFontSize(20)
     pdf.text('Your Mindfulness Journey', 105, yOffset, { align: 'center' })
+    yOffset += 10
+
+    pdf.setFontSize(12)
+    pdf.text(currentDate, 105, yOffset, { align: 'center' })
     yOffset += 15
 
     pdf.setFontSize(12)
+    pdf.setFont("Arial", 'bold')
+    pdf.text('Summary:', 15, yOffset)
+    yOffset += 10
+
+    pdf.setFont("Arial", 'normal')
+    const summaryLines = pdf.splitTextToSize(summary.summary, 180)
+    pdf.text(summaryLines, 15, yOffset)
+    yOffset += summaryLines.length * 7 + 10
+
+    if (summary.tasks.length > 0) {
+      pdf.setFont("Arial", 'bold')
+      pdf.text('Suggested Tasks:', 15, yOffset)
+      yOffset += 10
+
+      pdf.setFont("Arial", 'normal')
+      summary.tasks.forEach((task, index) => {
+        const taskLines = pdf.splitTextToSize(`${index + 1}. ${task}`, 170)
+        pdf.text(taskLines, 25, yOffset)
+        yOffset += taskLines.length * 7 + 5
+      })
+      yOffset += 10
+    }
+
     answeredQuestions.forEach((question, index) => {
       if (yOffset > 270) {
         pdf.addPage()
@@ -97,6 +135,20 @@ export default function ReviewAnswers({ questions, answers, onClose, onReset }: 
           <CardTitle className="text-3xl text-center text-foreground font-serif">Your Mindfulness Journey</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
+          <div className="mb-6">
+            <h3 className="font-semibold text-lg mb-2 text-foreground">Summary</h3>
+            <p className="text-sm text-foreground/80">{summary.summary}</p>
+          </div>
+          {summary.tasks.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-semibold text-lg mb-2 text-foreground">Suggested Tasks</h3>
+              <ul className="list-disc list-inside">
+                {summary.tasks.map((task, index) => (
+                  <li key={index} className="text-sm text-foreground/80">{task}</li>
+                ))}
+              </ul>
+            </div>
+          )}
           <ScrollArea className="h-[50vh] pr-4" id="answers-to-save">
             {answeredQuestions.map((question) => (
               <div key={question.id} className="mb-6">

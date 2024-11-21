@@ -7,11 +7,22 @@ import { Button } from "@/components/ui/button"
 import { Toggle } from "@/components/ui/toggle"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import ReviewAnswers from "@/components/ReviewAnswers"
+import AnimatedSummary from "@/components/AnimatedSummary"
+
+// Constants
+const BREATHING_EXERCISE_DURATION = 5 // seconds
+const QUESTIONS_BEFORE_REVIEW = 10
+const INITIAL_COUNTDOWN = 4
 
 interface Question {
   id: number
   text: string
   options: string[]
+}
+
+interface Summary {
+  summary: string;
+  tasks: string[];
 }
 
 const initialQuestions: Question[] = [
@@ -27,16 +38,11 @@ const initialQuestions: Question[] = [
   },
   {
     id: 3,
-    text: "How much time can you dedicate to self-reflection or wellness today?",
-    options: ["5 minutes", "10 minutes", "15 minutes", "30 minutes", "1 hour or more", "Not sure"],
-  },
-  {
-    id: 4,
     text: "What's your main intention for today?",
     options: ["Stay calm", "Be productive", "Feel connected", "Rest and recharge", "Practice mindfulness", "Not sure"],
   },
   {
-    id: 5,
+    id: 4,
     text: "How well did you sleep last night?",
     options: ["Very well", "Well", "Neutral", "Poorly", "Very poorly", "I didn't sleep", "Not sure"],
   },
@@ -82,10 +88,13 @@ export default function CalmForm() {
   const [answers, setAnswers] = useState<{ [key: number]: string[] }>({})
   const [showFAQ, setShowFAQ] = useState(false)
   const [showTransition, setShowTransition] = useState<false | 'in' | 'out'>(false)
-  const [countdown, setCountdown] = useState(4)
+  const [countdown, setCountdown] = useState(INITIAL_COUNTDOWN)
   const [nextQuestionIndex, setNextQuestionIndex] = useState(0)
   const [showReview, setShowReview] = useState(false)
   const [showReviewAnswers, setShowReviewAnswers] = useState(false)
+  const [summary, setSummary] = useState<Summary | null>(null)
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false)
+  const [summaryAnimationComplete, setSummaryAnimationComplete] = useState(false)
 
   const generateNextQuestion = useCallback(async () => {
     try {
@@ -124,21 +133,49 @@ export default function CalmForm() {
     }
   }, [questions, answers])
 
+  const generateSummary = useCallback(async () => {
+    setIsGeneratingSummary(true)
+    try {
+      const response = await fetch('/api/generate-summary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          questions: questions.map(q => q.text),
+          answers: answers,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to generate summary')
+      }
+
+      const data = await response.json()
+      setSummary(data)
+    } catch (error) {
+      console.error('Error generating summary:', error)
+      setSummary({ summary: 'Unable to generate summary at this time.', tasks: [] })
+    } finally {
+      setIsGeneratingSummary(false)
+    }
+  }, [questions, answers])
+
   const nextStep = () => {
     if (currentStep < questions.length) {
       setNextQuestionIndex(currentStep + 1)
       setShowTransition('in')
-      setCountdown(5)
+      setCountdown(BREATHING_EXERCISE_DURATION)
     } else {
       generateNextQuestion()
       setNextQuestionIndex(currentStep + 1)
       setShowTransition('in')
-      setCountdown(5)
+      setCountdown(BREATHING_EXERCISE_DURATION)
     }
 
     // Check if it's time to show the review
-    if (currentStep >= 10 && (currentStep - 10) % 5 === 0) {
-      setShowReview(true)
+    if (currentStep >= QUESTIONS_BEFORE_REVIEW - 1 && (currentStep - (QUESTIONS_BEFORE_REVIEW - 1)) % QUESTIONS_BEFORE_REVIEW === 0) {
+      generateSummary()
     }
   }
 
@@ -149,17 +186,21 @@ export default function CalmForm() {
           if (prev > 1) return prev - 1
           if (showTransition === 'in') {
             setShowTransition('out')
-            return 5
+            return BREATHING_EXERCISE_DURATION
           }
           clearInterval(timer)
           setShowTransition(false)
-          setCurrentStep(nextQuestionIndex)
-          return 5
+          if (isGeneratingSummary || summary) {
+            setShowReview(true)
+          } else {
+            setCurrentStep(nextQuestionIndex)
+          }
+          return BREATHING_EXERCISE_DURATION
         })
       }, 1000)
       return () => clearInterval(timer)
     }
-  }, [showTransition, nextQuestionIndex])
+  }, [showTransition, nextQuestionIndex, isGeneratingSummary, summary])
 
   const prevStep = () => {
     setCurrentStep(prev => Math.max(prev - 1, 0))
@@ -182,11 +223,18 @@ export default function CalmForm() {
     setAnswers({});
     setShowFAQ(false);
     setShowTransition(false);
-    setCountdown(5);
+    setCountdown(BREATHING_EXERCISE_DURATION);
     setNextQuestionIndex(0);
     setShowReview(false);
     setShowReviewAnswers(false);
+    setSummary(null);
+    setIsGeneratingSummary(false); 
   }
+
+  const handleSummaryAnimationComplete = () => {
+    setSummaryAnimationComplete(true)
+  }
+
 
   const renderReviewOptions = () => (
     <Card className="border-none shadow-xl bg-card/60 backdrop-blur-sm rounded-3xl">
@@ -194,24 +242,44 @@ export default function CalmForm() {
         <CardTitle className="text-3xl text-center text-foreground font-serif">Review Your Answers</CardTitle>
       </CardHeader>
       <CardContent className="p-6 text-center">
-        <p className="text-foreground/90 mb-4">Would you like to finish and review your answers or continue?</p>
-        <div className="flex justify-center space-x-4">
-          <Button
-            onClick={() => {
-              setShowReviewAnswers(true);
-              setShowReview(false);
-            }}
-            className="px-6 py-2 text-lg bg-accent text-muted hover:bg-accent/80 transition-all duration-300 rounded-full border-none"
-          >
-            Review Answers
-          </Button>
-          <Button
-            onClick={() => setShowReview(false)}
-            className="px-6 py-2 text-lg bg-muted/30  text-accent hover:bg-muted/50 transition-all duration-300 rounded-full border-none"
-          >
-            Continue
-          </Button>
-        </div>
+        {summary ? (
+          <AnimatedSummary 
+            summary={summary.summary} 
+            tasks={summary.tasks} 
+            onAnimationComplete={handleSummaryAnimationComplete}
+          />
+        ) : (
+          <p className="text-foreground/90 mb-4">Generating summary...</p>
+        )}
+        <AnimatePresence>
+          {summaryAnimationComplete && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <p className="text-foreground/90 mt-6 mb-4">Would you like to finish and review your answers or continue?</p>
+              <div className="flex justify-center space-x-4">
+                <Button
+                  onClick={() => {
+                    setShowReviewAnswers(true);
+                    setShowReview(false);
+                  }}
+                  className="px-6 py-2 text-lg bg-accent text-muted hover:bg-accent/80 transition-all duration-300 rounded-full border-none"
+                >
+                  Finish
+                </Button>
+                <Button
+                  onClick={() => setShowReview(false)}
+                  className="px-6 py-2 text-lg bg-muted/30  text-accent hover:bg-muted/50 transition-all duration-300 rounded-full border-none"
+                >
+                  Continue
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </CardContent>
     </Card>
   )
@@ -271,13 +339,14 @@ export default function CalmForm() {
             </Card>
           </motion.div>
         ) : showReview ? (
-          <motion.div
+<motion.div
             key="review"
             variants={cardVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
             className="w-full max-w-md"
+            style={{ minHeight: summary ? `${(summary.summary.split(/(?<=[.!?])\s+/).length + summary.tasks.length) * 24 + 300}px` : 'auto' }}
           >
             {renderReviewOptions()}
           </motion.div>
@@ -285,6 +354,7 @@ export default function CalmForm() {
           <ReviewAnswers
             questions={questions}
             answers={answers}
+            summary={summary || { summary: '', tasks: [] }}
             onClose={() => setShowReviewAnswers(false)}
             onReset={resetForm}
           />
@@ -343,13 +413,13 @@ export default function CalmForm() {
                       <p className="text-2xl text-foreground mb-6">{questions[currentStep - 1].text}</p>
                     </AnimatedText>
                     <AnimatedText custom={3}>
-                      <div className="flex flex-wrap justify-center gap-2 mb-4">
+                      <div className="flex flex-wrap justify-center gap-2">
                         {questions[currentStep - 1].options.map((option, index) => (
                           <Toggle
                             key={index}
                             pressed={answers[currentStep]?.includes(option)}
                             onPressedChange={() => handleOptionToggle(currentStep, option)}
-                            className="bg-muted/30 hover:bg-muted/50 data-[state=on]:bg-accent/20 data-[state=on]:text-accent data-[state=on]:border border-accent rounded-full px-4 mx-1 text-foreground"
+                            className="bg-muted/30 hover:bg-muted/50 data-[state=on]:bg-accent/20 data-[state=on]:text-accent data-[state=on]:border border-accent rounded-full px-2 sm:px-4 sm:mx-1 text-foreground"
                           >
                             {option}
                           </Toggle>

@@ -91,15 +91,15 @@ export async function POST(req: NextRequest) {
   The first five questions below are the most important and assist in setting the context for the user's reflection.
   
   ## Priority Questions  
-  ${questions.slice(0, 5).map((q, index) => `
+  ${questions.slice(0, 4).map((q, index) => `
   ${index + 1}. Q: ${q.question}  
      A: ${q.options.join(", ") || "No answers provided"}  
   `).join("\n")}
   
   ## Additional Questions 
-  These questions are from previous sessions and should be considered when generating new questions.
-  ${questions.slice(5).map((q, index) => `
-  ${index + 6}. Q: ${q.question}
+  These questions are the other questions from this session questions.
+  ${questions.slice(4).map((q, index) => `
+  ${index + 5}. Q: ${q.question}
      A: ${q.options.join(", ") || "No answers provided"}
   `).join("\n")}
   
@@ -114,8 +114,6 @@ export async function POST(req: NextRequest) {
   # TASK  
   Generate one new reflective question and include 3-8 concise and relevant answer options.
   `;
-  
-  console.log('Prompt:', prompt)
 
   try {
     const { object } = await generateObject({
